@@ -4,10 +4,12 @@ import org.example.jobmailsender.model.Recipient;
 import org.example.jobmailsender.repository.RecipientRepository;
 import org.example.jobmailsender.service.DataService;
 import org.example.jobmailsender.service.EmailService;
+import org.example.jobmailsender.service.RecipientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -20,7 +22,7 @@ public class MailSenderRunner implements CommandLineRunner {
     private EmailService emailService;
 
     @Autowired
-    private RecipientRepository recipientRepository;
+    private RecipientService recipientService;
 
 //    @Override
 //    public void run(String... args) throws Exception {
@@ -32,7 +34,9 @@ public class MailSenderRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<Recipient> recipients = recipientRepository.findAll();
-        emailService.sendEmailWithAttachment(recipients, "src/main/resources/resume.pdf");
+        List<Recipient> recipients = recipientService.getFirstTenRecipients();
+        emailService.sendEmailWithAttachment(recipients, "src/main/resources/Charles_E_Darwin_Resume.pdf");
+        recipientService.deleteFirstTenRecipients();
+        System.out.println("Emails sent and first ten recipients deleted from the database.");
     }
 }
